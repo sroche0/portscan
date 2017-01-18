@@ -1,0 +1,1 @@
+curl -ks -H "$tok"  https://localhost:4443/object/vdcs/vdc/list | xmllint --format -
