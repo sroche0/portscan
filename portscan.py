@@ -171,8 +171,7 @@ class NetworkScanner:
                 base_list['dns']['ip_list'] = self.extract_ip(next(rack_ips))
             elif 'public' in line:
                 base_list['nodes']['ip_list'].extend(self.extract_ip(line))
-                base_list['services']['ip_list'].extend(self.extract_ip(line))
-            elif 'Remote Ipmi' in line:
+            elif 'private Ipmi' in line:
                 base_list['rmm']['ip_list'].extend(self.extract_ip(line))
 
         return base_list
@@ -198,8 +197,14 @@ class NetworkScanner:
                 "ip_list": [],
                 "ports": {
                     "SSH": [22],
-                    "ECS UI": [80, 443, 4443],
-                    "Geo Rep": [9094, 9095, 9096, 9097, 9098]
+                    "GUI": [80, 443, 4443],
+                    "Geo Rep": [9094, 9095, 9096, 9097, 9098],
+                    "s3": [9020, 9021, 9026, 9027],
+                    "HDFS": [9040],
+                    "ATMOS": [9022, 9023],
+                    "Swift": [9024, 9025],
+                    "CAS": [3218, 9250],
+                    "NFS": [111, 2049, 10000]
                 }
             },
             "rmm": {
@@ -209,17 +214,6 @@ class NetworkScanner:
                     "CD": [5120, 5124],
                     "FD": [5123, 5127],
                     "Video": [7578, 7582]
-                }
-            },
-            "services": {
-                "ip_list": [],
-                "ports": {
-                    "s3 API": [9020, 9021, 9026, 9027],
-                    "HDFS": [9040],
-                    "ATMOS": [9022, 9023],
-                    "Swift API": [9024, 9025],
-                    "CAS API": [3218, 9250],
-                    "NFS": [111, 2049, 10000]
                 }
             },
             "dns": {
@@ -243,7 +237,7 @@ class NetworkScanner:
         to_check = self.build_ip_list(base_list)
 
         # Iterate through the loaded data and check the IPs and ports
-        
+
         failed_ips = self.ip_scanner(to_check)
         if failed_ips:
             any_failed.extend(failed_ips)
